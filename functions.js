@@ -23,6 +23,7 @@ function outputRSS(){
 // ----------------------------------------------------------------------------------------------
 
 $(document).ready(function(){
+  outputRSS();
   // ----------------------------------------------------------------------------------------------
   // Use Yahoo Query Language (YQL) https://developer.yahoo.com/yql/
   // Take the provided feed, and add it to a YQL query.
