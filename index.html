@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>YQL feed</title>
+    <title>RSS feed</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <!-- RSS Feed -->
+    <!-- Using JavaScript -->
     <div id="rssContainer">
         <h2 id="rssHeader">UBC Security Notifications</h2>
         <div class="rss-view-content">
@@ -13,6 +14,19 @@
                 <!-- RSS feed items here -->
             </table>
         </div>
+    </div>
+
+    <br>
+
+    <!-- Using PHP -->
+    <div id="rssContainer">
+        <h2 id="rssHeader">UBC Security Notifications</h2>
+        <div id="output" onclick="outputRSS()">CLICK ME</div>
+        <!-- <div class="rss-view-content"> -->
+            <!-- <table id="rssFeed"> -->
+                <!-- RSS feed items here -->
+            <!-- </table> -->
+        <!-- </div> -->
     </div>
 
     <noscript>
