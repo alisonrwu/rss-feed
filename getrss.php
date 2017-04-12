@@ -17,6 +17,7 @@
 	// echo $channel_title;
 
 	echo '<div class="rss-view-content"><table id="rssFeed">';
+	//$arr = array(); // TODO !!!
 	$items = $channel->getElementsByTagName('item');
 	for($i=0; $i<10; $i++){
 		$item_title = $items->item($i)->getElementsByTagName('title')->item(0)->childNodes->item(0)->nodeValue;
@@ -27,8 +28,10 @@
 		$tr.= substr($item_date,0,11);
         $tr.= " | </span>"."<a href='".$item_link."' id='rssTitle'>".$item_title."</a></p></td>"."</tr>";
         echo $tr;
+        //$arr[$i] = array($item_title, $item_link, $item_date); // TODO !!!
 	}
 	echo '</table></div>';
+	//echo json_encode($arr); // TODO !!!
 	
 	// phpinfo();  // Print PHP version and config info
 ?>
