@@ -115,23 +115,64 @@ var parseCustomXML = function(data){
         if(title.includes(prevTitle)) {
             return; //break
         }
-        // var rssRow = "<tr>"+
-        //              "<td id='rssItem'>" +
-        //              "<a href='"+link+"' id='rssTitle'><p>"+title+"</p></a></td>"+
-        //              "</tr>";
-        // $("#rssFeed").append(rssRow);
-        arr.push([title, link, date]);
+        arr.push({'title':title, 'link':link, 'date':date});
         limit--;
         prevTitle = title;
     });
     return arr;
 }
+function toHtmlRssRow(source, link, title){
+    var rssRow = "<tr>"+
+                 "<td id='rssItem'>" +
+                 "<a href='"+link+"' id='rssTitle'><p><span id='rssSub'>"+source+' | </span>'+title+"</p></a></td>"+
+                 "</tr>";
+    return rssRow;
+}
+function mergeDateArrays(a, b){
+    let array = new Array(a.length + b.length);
+    let i=0, ai=0, bi=0;
+    while(ai<a.length && bi<b.length){
+        array[i++] = a[ai]['date'] >= b[bi]['date'] ? a[ai++] : b[bi++];
+    }
+    while(ai<a.length){
+        array[i++] = a[ai++];
+    }
+    while(bi<b.length){
+        array[i++] = b[bi++];
+    }
+    return array;
+}
+
 var promises = [];
 promises.push(loadRSS($.parseJSON, "getrss.php?feed=http://bulletins.it.ubc.ca/archives/category/security/feed"));
 promises.push(loadRSS(parseCustomXML, "https://hub.bcchr.ca/createrssfeed.action?types=blogpost&blogpostSubTypes=comment&blogpostSubTypes=attachment&spaces=it&title=Confluence+RSS+Feed&labelString%3D&excludedSpaceKeys%3D&sort=modified&maxResults=10&timeSpan=1000&showContent=true&confirm=Create+RSS+Feed&"));
 Promise.all(promises).then(function(res){
-    console.log(res);
+    // console.log(res);
+    let source0, source1;
+    if(res[0][0]['link'].includes('ubc')){
+        source0 = 'UBC';
+        source1 = 'BCCHR';
+    } else {
+        source0 = 'BCCHR';
+        source1 = 'UBC';
+    }
+    
+    for(let i=0; i<res[0].length; i++){
+        res[0][i]['date'] = new Date(res[0][i]['date']);
+        res[0][i]['source'] = source0;
+    }
+    for(let i=0; i<res[1].length; i++){
+        res[1][i].date = new Date(res[1][i].date);
+        res[1][i]['source'] = source1;
+    }
+
+    let arr = mergeDateArrays(res[0], res[1]);
+    console.log(arr);
+    for(let i=0; i<arr.length; i++){
+        $("#rssFeed").append(toHtmlRssRow(arr[i]['source'], arr[i]['link'], arr[i]['title']));
+    }
 }).catch(function(err){
     console.log(err);
+    $("#rssFeed").append("<p id='rssError'>RSS Feed cannot load</p>");
 });
 */
